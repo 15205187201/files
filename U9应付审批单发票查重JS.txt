@@ -1,0 +1,65 @@
+<xform:editShow>
+
+    <script type="text/javascript">
+		//####################提交校验JS####################
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+			function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+					var result = false;
+					var message = "";
+					var data = "";
+					var mxbCount = ($("#TABLE_DL_fd_3bc02736d96df4 tr").length-2);
+					for(var i = 0;i<mxbCount;i++){
+						var fplx = GetXFormFieldValueById("fd_3bc02736d96df4."+i+".fd_3bc0276a64d946");
+						var fphm = GetXFormFieldValueById("fd_3bc02736d96df4."+i+".fd_3bc02778011132");
+						data = data+","+fphm;
+					
+					}
+					
+					if(data.length>0){
+						data = data.substring(1);
+					}
+					
+
+					$.ajax({
+						url:"/ekp/api/km-review/digitalScreenData/checkInvoiceDuplicate",
+						type:"POST",
+						async:false,
+						data:{invoiceNumbers:data},
+						dataType:'json',
+						success:function (data){
+			  
+							if(data){
+								result  = true;
+								
+							}else{
+								//message = data.message;
+								dialog.alert("发票号重复提交，请检查发票号！");
+								return false;
+							}
+
+						},
+						error:function (){
+							dialog.failure('验证出错，请联系管理员！');
+						}
+					})
+					
+					return result;
+                }else{
+					return true;
+				}
+	}
+            });
+    </script>
+</xform:editShow>
