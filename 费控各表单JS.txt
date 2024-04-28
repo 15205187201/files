@@ -1,0 +1,475 @@
+对公付款、预付款和发票入账：
+
+<xform:editShow>
+
+    <script type="text/javascript">
+		//####################提交校验JS####################
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+			function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+		    var gld = GetXFormFieldValueById("fd_guanlianshenqingdan");
+		    var sqbm = GetXFormFieldValueById("fd_chengbenzhongxin")[0];//成本中心
+		    var from = GetXFormFieldValueById("fd_fukaunsuoshugongsi")[0];
+		    var data = {};
+			var mxbCount = ($("#TABLE_DL_fd_paymx tr").length-3);
+			for(var i = 0;i<mxbCount;i++){
+			var secTypeCode = GetXFormFieldValueById("fd_paymx."+i+".fd_feiyongleibie")[5];
+			var money = GetXFormFieldValueById("fd_paymx."+i+".fd_feiyongjine")*GetXFormFieldValueById("fd_hl");
+
+			if(data[secTypeCode] == undefined || data[secTypeCode] == ""){
+			data[secTypeCode] = Number(money);
+			}else{
+			var lastMoney = data[secTypeCode];
+			data[secTypeCode] = Number(lastMoney) + Number(money);
+			}
+			}
+			
+	     data.gld = gld[0];
+	     var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=2",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+			
+			return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
+
+
+
+
+
+报销：
+
+<xform:editShow>
+
+    <script type="text/javascript">
+		//####################提交校验JS####################
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+			function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+		     var gld = GetXFormFieldValueById("fd_3ba519ba55b402");
+		    var sqbm = GetXFormFieldValueById("fd_CBZX")[0];//成本中心
+		    var from = GetXFormFieldValueById("fd_3bab448c46574a")[0];
+		    var data = {};
+			var mxbCount = ($("#TABLE_DL_fd_feiyongmx tr").length-2)/3;
+			for(var i = 0;i<mxbCount;i++){
+			var secTypeCode = GetXFormFieldValueById("fd_feiyongmx."+i+".fd_FYLB")[5];
+			var money = GetXFormFieldValueById("fd_feiyongmx."+i+".fd_bencifukaunjinemingxi");
+
+			if(data[secTypeCode] == undefined || data[secTypeCode] == ""){
+			data[secTypeCode] = Number(money);
+			}else{
+			var lastMoney = data[secTypeCode];
+			data[secTypeCode] = Number(lastMoney) + Number(money);
+			}
+			}
+			
+		//判断是否申请出差补助
+		var applyGnCcbz = $($("xformflag[flagid='fd_SFSQCCBZ'] input")[0]).prop("checked")
+		var applyGwCcbz = $($("xformflag[flagid='fd_3bc3e1fcf526a4'] input")[0]).prop("checked");
+		if(applyGnCcbz){
+		
+			var gnccbz = Number(GetXFormFieldValueById("fd_3c67377659249a"));
+			if(gnccbz>0){
+			
+					data[10100101]= gnccbz;
+				}
+			
+			
+		}		
+			if(applyGwCcbz){
+			var gwccbz = Number(GetXFormFieldValueById("fd_3c67379c2221ec"));
+				if(gwccbz>0){
+					data[10100102]= gwccbz ;
+				}
+				
+			}
+	     data.gld = gld[0];
+	     var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=2",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+			
+			return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
+
+
+
+
+
+出差补助：
+
+<xform:editShow>
+    <script type="text/javascript">
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+                function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+		    var gld = GetXFormFieldValueById("fd_3ba11aa97fed2e");
+                    var gnccbzzje = GetXFormFieldValueById("fd_3c545ca10e1aaa")[0];
+                    var hasGwcc = GetXFormFieldById("fd_3bc3caf4befe50")[0].checked;
+                    var gwccbzzje = GetXFormFieldValueById("fd_3c545cc853b6ee")[0];
+		    var from = GetXFormFieldValueById("fd_3bab699690ac5c")[0];
+                    var sqbm = GetXFormFieldValueById("fd_CBZX")[0];//成本中心
+		    var data = {};
+                    data[10100101]= gnccbzzje;
+                    data[10100102]= gwccbzzje;
+		    data.gld = gld[0];
+	    var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=1",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+
+		return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
+
+
+
+
+业务招待：
+
+<xform:editShow>
+    <script type="text/javascript">
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+                function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+                    var feeje = Number(GetXFormFieldValueById("fd_3bac0acf907be4")) + Number(GetXFormFieldValueById("fd_3bac0ad1ab2cca"));
+		    var from = GetXFormFieldValueById("fd_3bab8903bc48d6")[0];
+                    var sqbm = GetXFormFieldValueById("fd_3bab8912e931c0")[0];
+		    var data = {};    
+            data[10100701] = feeje;
+	    var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=3",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+
+		return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
+
+
+
+
+请购单：
+
+<xform:editShow>
+
+    <script type="text/javascript">
+		//####################提交校验JS####################
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+			function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+		    var sqbm = GetXFormFieldValueById("fd_CBZX")[0];//成本中心
+		    var from = GetXFormFieldValueById("fd_gongsidaima");
+		    var data = {};
+			var mxbCount = $("#TABLE_DL_fd_caigoumx tr").length-2;
+			for(var i = 0;i<mxbCount;i++){
+			var secTypeCode = GetXFormFieldValueById("fd_caigoumx."+i+".fd_3c67571a30276a")[0];
+			var money = GetXFormFieldValueById("fd_caigoumx."+i+".fd_yugujiage");
+
+			if(data[secTypeCode] == undefined || data[secTypeCode] == ""){
+			data[secTypeCode] = Number(money);
+			}else{
+			var lastMoney = data[secTypeCode];
+			data[secTypeCode] = Number(lastMoney) + Number(money);
+			}
+			}
+			
+
+	     var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=5",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+			
+			return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
+
+
+
+
+
+
+出差申请：
+
+<xform:editShow>
+    <script type="text/javascript">
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+                //PC端js代码
+                Com_Parameter.event["submit"].push(judgeBudget);
+
+                function judgeBudget() {
+
+		    var btnName = window.event.target.innerText;
+		    if(!btnName){
+			btnName = window.event.target.value;
+		    }
+		
+		    if(btnName == "提交"){
+
+		    var result = false;
+		    var message = "";
+		    var flowno = GetXFormFieldValueById("fd_flowno");
+                    var ccjePlan = Number(GetXFormFieldValueById("fd_3c67199e399f5a"));
+		    var from = GetXFormFieldValueById("fd_3badc8c799e156")[0];
+                    var sqbm = GetXFormFieldValueById("fd_CBZX")[0];//成本中心
+		    var data = {};    
+                    
+		    var mxcount = $("#TABLE_DL_fd_3bd4e9e848e5ac tr").length-2;
+		    for(var i = 0;i<mxcount ;i++){
+			var destPlace = GetXFormFieldValueById("fd_3bd4e9e848e5ac."+i+".fd_3ba54274bee5aa");//目的省份
+			if("海外" == destPlace){
+				data[10100102]= ccjePlan; 
+			     }else{
+				data[10100101]= ccjePlan; 
+				}
+			}
+
+	    var dataJson = JSON.stringify(data);
+
+            $.ajax({
+                url:"/ekp/api/km-review/budget/judgeBudgetQuery?from="+from+"&costCenter="+sqbm+"&flowNo="+flowno+"&formType=3",
+                type:"POST",
+                async:false,
+		data:'json',
+                contentType:'application/json',
+                data:dataJson,
+                success:function (data){
+      
+                    if(data.canApply){
+                        console.log(result );
+			result  = true;
+                       	
+                    }else{
+			message = data.message;
+			console.log("message:"+data.message);
+                        dialog.alert(message);
+                        return data.canApply;
+                    }
+
+                },
+                error:function (){
+                    dialog.failure('验证出错，请联系管理员！');
+                }
+            })
+
+		return result;
+                }else{
+			return true;
+		}
+	}
+            });
+    </script>
+</xform:editShow>
