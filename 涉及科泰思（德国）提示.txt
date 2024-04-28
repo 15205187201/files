@@ -1,0 +1,81 @@
+
+##QFAT1
+
+<script type="text/javascript">
+//此处添加js代码
+var hasremind = 0;
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+				AttachXFormValueChangeEventById("fd_3b96300576d7ba", function check(value,domElement){
+					//function为绑定函数
+					var bz = $( GetXFormSameRowFieldById(domElement, "fd_3b96300576d7ba")).val();
+					console.log(bz);
+					if("C005" == bz&&hasremind == 0){
+						dialog.alert('请注意选择是否涉及科泰思（德国）！');
+						hasremind = 1;
+					}
+				});
+            });
+	
+
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+				AttachXFormValueChangeEventById("fd_3bb5d404e651ea", function check(value,domElement){
+					//function为绑定函数
+					var bz = $( GetXFormSameRowFieldById(domElement, "fd_3bb5d404e651ea")).val();
+					if("C005" == bz&&hasremind == 0){
+						dialog.alert('请注意选择是否涉及科泰思（德国）！');
+						hasremind = 1;
+					}
+				});
+            });		
+
+</script>
+
+
+##对公付款
+
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+				AttachXFormValueChangeEventById("fd_bizhong",function(){
+					//function为绑定函数
+					var bz = GetXFormFieldValueById("fd_bizhong");
+					console.log(bz);
+					if("C005" == bz){
+						dialog.alert('请注意选择是否涉及科泰思（德国）！');
+					}
+				});
+            });
+			
+##QFAT2
+
+<script type="text/javascript">
+//此处添加js代码
+var hasremind = 0;
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+				AttachXFormValueChangeEventById("fd_3b96300576d7ba", function check(value,domElement){
+					//function为绑定函数
+					var bz = $( GetXFormSameRowFieldById(domElement, "fd_3b96300576d7ba")).val();
+					console.log(bz);
+					if("C005" == bz&&hasremind == 0){
+						dialog.alert('请注意选择是否涉及科泰思（德国）！');
+						hasremind = 1;
+					}
+				});
+            });
+	
+
+        seajs.use(['lui/jquery', 'lui/dialog', 'lui/topic', 'lui/data/source', 'lui/menu', 'lui/toolbar'],
+            function ($, dialog, topic, source, menu, toolbar) {
+				AttachXFormValueChangeEventById("fd_3bb5d404e651ea", function check(value,domElement){
+					//function为绑定函数
+					var bz = $( GetXFormSameRowFieldById(domElement, "fd_3bb5d404e651ea")).val();
+					if("C005" == bz&&hasremind == 0){
+						dialog.alert('请注意选择是否涉及科泰思（德国）！');
+						hasremind = 1;
+					}
+				});
+            });		
+
+</script>			
